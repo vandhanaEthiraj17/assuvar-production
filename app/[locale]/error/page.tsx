@@ -2,8 +2,9 @@ import { Link } from '@/src/i18n/navigation';
 import { AlertCircle } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 
-export default async function ErrorPage({ params }: { params: { locale: string } }) {
-    const t = await getTranslations({ locale: params.locale, namespace: 'Common' });
+export default async function ErrorPage({ params }: { params: Promise<{ locale: string }> }) {
+    const { locale } = await params;
+    const t = await getTranslations({ locale: locale, namespace: 'Common' });
 
     return (
         <main className="min-h-screen flex items-center justify-center bg-slate-50 px-6">

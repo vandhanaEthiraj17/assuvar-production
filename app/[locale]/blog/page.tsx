@@ -4,18 +4,20 @@ import { useTranslations } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
 import { ArrowRight, Calendar, Tag } from 'lucide-react';
 
-export async function generateMetadata({ params }: { params: { locale: string } }) {
-    const t = await getTranslations({ locale: params.locale, namespace: 'Blog' });
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+    const { locale } = await params;
+    const t = await getTranslations({ locale: locale, namespace: 'Blog' });
     return {
         title: t('metaTitle'),
         description: t('metaDescription'),
     };
 }
 
-export default async function BlogIndex({ params }: { params: { locale: string } }) {
+export default async function BlogIndex({ params }: { params: Promise<{ locale: string }> }) {
+    const { locale } = await params;
     const posts = await getSortedPostsData('blog');
-    const t = await getTranslations({ locale: params.locale, namespace: 'Blog' });
-    const tCommon = await getTranslations({ locale: params.locale, namespace: 'Common' });
+    const t = await getTranslations({ locale: locale, namespace: 'Blog' });
+    const tCommon = await getTranslations({ locale: locale, namespace: 'Common' });
 
     return (
         <main className="pt-32 pb-24 min-h-screen bg-slate-50">
@@ -48,7 +50,7 @@ export default async function BlogIndex({ params }: { params: { locale: string }
                                 <div className="p-6 flex-1 flex flex-col">
                                     <div className="flex items-center gap-2 text-xs text-slate-500 mb-3">
                                         <Calendar className="w-3 h-3" />
-                                        {new Date(post.date).toLocaleDateString(params.locale)}
+                                        {new Date(post.date).toLocaleDateString(locale)}
                                     </div>
                                     <h2 className="text-xl font-bold text-structura-black mb-3 group-hover:text-structura-blue transition-colors">
                                         {post.title}

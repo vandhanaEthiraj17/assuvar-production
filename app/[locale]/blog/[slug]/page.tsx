@@ -4,14 +4,15 @@ import { notFound } from 'next/navigation';
 import { Calendar, Tag, ArrowLeft } from 'lucide-react';
 import { Link } from '@/src/i18n/navigation';
 
-export async function generateMetadata({ params }: { params: { locale: string; slug: string } }) {
-    const post = await getPostData('blog', params.slug);
+export async function generateMetadata({ params }: { params: Promise<{ locale: string; slug: string }> }) {
+    const { locale, slug } = await params;
+    const post = await getPostData('blog', slug);
     if (!post) return {};
 
     // Try to find translated title
-    const t = await getTranslations({ locale: params.locale, namespace: `blog.${params.slug}` });
-    const title = t('title') !== `blog.${params.slug}.title` ? t('title') : post.title;
-    const summary = t('summary') !== `blog.${params.slug}.summary` ? t('summary') : post.summary;
+    const t = await getTranslations({ locale: locale, namespace: `blog.${slug}` });
+    const title = t('title') !== `blog.${slug}.title` ? t('title') : post.title;
+    const summary = t('summary') !== `blog.${slug}.summary` ? t('summary') : post.summary;
 
     return {
         title: `${title} | Structura IT`,
@@ -26,17 +27,18 @@ export async function generateStaticParams() {
     }));
 }
 
-export default async function BlogPost({ params }: { params: { locale: string; slug: string } }) {
-    const post = await getPostData('blog', params.slug);
+export default async function BlogPost({ params }: { params: Promise<{ locale: string; slug: string }> }) {
+    const { locale, slug } = await params;
+    const post = await getPostData('blog', slug);
     if (!post) notFound();
 
     // Get translations for dynamic content
-    const tPost = await getTranslations({ locale: params.locale, namespace: `blog.${params.slug}` });
-    const tCommon = await getTranslations({ locale: params.locale, namespace: 'Common' });
+    const tPost = await getTranslations({ locale: locale, namespace: `blog.${slug}` });
+    const tCommon = await getTranslations({ locale: locale, namespace: 'Common' });
 
     // Fallback to English/Source if translation key matches the key itself (meaning missing)
-    const title = tPost('title') !== `blog.${params.slug}.title` ? tPost('title') : post.title;
-    const content = tPost('body') !== `blog.${params.slug}.body` ? tPost('body') : post.contentHtml;
+    const title = tPost('title') !== `blog.${slug}.title` ? tPost('title') : post.title;
+    const content = tPost('body') !== `blog.${slug}.body` ? tPost('body') : post.contentHtml;
 
     return (
         <main className="pt-32 pb-24 min-h-screen bg-white">
@@ -52,7 +54,7 @@ export default async function BlogPost({ params }: { params: { locale: string; s
                         </span>
                         <span className="flex items-center gap-1">
                             <Calendar className="w-4 h-4" />
-                            {new Date(post.date).toLocaleDateString(params.locale)}
+                            {new Date(post.date).toLocaleDateString(locale)}
                         </span>
                     </div>
                     <h1 className="text-4xl md:text-5xl font-bold text-structura-black mb-6 leading-tight">
