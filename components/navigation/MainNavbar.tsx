@@ -50,11 +50,11 @@ export default function MainNavbar() {
 
                 {/* Desktop Right Side Actions */}
                 <div className="hidden md:flex items-center gap-6">
-                    <LanguageSwitcher />
-                    <div className="h-4 w-px bg-slate-300"></div>
                     <Link href="#" className="btn-fusion px-5 py-2.5 rounded-lg text-sm font-semibold">
                         {t('getConsultation')}
                     </Link>
+                    <div className="h-4 w-px bg-slate-300"></div>
+                    <LanguageSwitcher />
                 </div>
 
                 {/* MOBILE NAV Trigger (< 768px) */}

@@ -28,43 +28,59 @@ export default function LanguageSwitcher() {
         router.replace(pathname, { locale: newLocale });
     };
 
-    const currentName = localeNames[locale] || locale;
+    const getDisplayNames = (loc: string) => {
+        const fullName = localeNames[loc] || loc;
+        // Parse 'Language (Country)' format
+        const match = fullName.match(/^(.*?) \((.*)\)$/);
 
-    // Group locales by region for better UI (Optional, but "Accenture-style" implies structure)
-    // For now, simple list with scroll
+        if (match) {
+            const [, language, country] = match;
+            return {
+                country: country,
+                full: `${country} (${language})`,
+                language: language
+            };
+        }
+
+        return {
+            country: fullName,
+            full: fullName,
+            language: ''
+        };
+    };
+
+    const currentDisplay = getDisplayNames(locale);
 
     return (
         <div className="relative z-50" ref={dropdownRef}>
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 hover:text-black transition-colors rounded-md hover:bg-gray-100"
+                className="flex items-center gap-1.5 px-2 py-1.5 text-xs font-medium text-gray-700 hover:text-black transition-colors rounded-md hover:bg-gray-100"
                 aria-label="Select Language"
             >
-                <Globe className="w-4 h-4" />
-                <span className="hidden md:inline">{currentName.split('—')[0].trim()}</span>
-                <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                <Globe className="w-3.5 h-3.5" />
+                <span className="hidden md:inline">{currentDisplay.country}</span>
+                <ChevronDown className={`w-3 h-3 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
             </button>
 
             {isOpen && (
-                <div className="absolute right-0 mt-2 w-64 bg-white border border-gray-200 rounded-lg shadow-xl max-h-[80vh] overflow-y-auto animate-in fade-in zoom-in-95 duration-200">
-                    <div className="p-2 space-y-1">
-                        {locales.map((l) => (
-                            <button
-                                key={l}
-                                onClick={() => handleLocaleChange(l)}
-                                className={`w-full text-left px-3 py-2 text-sm rounded-md flex items-center justify-between group transition-colors
-                  ${locale === l ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50'}
-                `}
-                            >
-                                <div className="flex flex-col">
-                                    <span className="font-medium">{localeNames[l].split('—')[0]}</span>
-                                    <span className="text-xs text-gray-500 group-hover:text-gray-700">
-                                        {localeNames[l].split('—')[1] || l}
-                                    </span>
-                                </div>
-                                {locale === l && <Check className="w-4 h-4" />}
-                            </button>
-                        ))}
+                <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-xl max-h-[60vh] overflow-y-auto animate-in fade-in zoom-in-95 duration-200">
+                    <div className="p-1 space-y-0.5">
+                        {locales.map((l) => {
+                            const display = getDisplayNames(l);
+                            return (
+                                <button
+                                    key={l}
+                                    onClick={() => handleLocaleChange(l)}
+                                    className={`w-full text-left px-3 py-2 text-xs rounded-md flex items-center justify-between group transition-colors
+                      ${locale === l ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50'}
+                    `}
+                                >
+                                    <span className="font-medium">{display.full}</span>
+                                    {locale === l && <Check className="w-3 h-3" />}
+                                </button>
+                            );
+                        })}
                     </div>
                 </div>
             )}

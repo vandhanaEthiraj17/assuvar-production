@@ -22,8 +22,13 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   });
 
   return {
-    title: "Structura IT • Next-Gen Infrastructure",
+    title: "Assuvar • Next-Gen Infrastructure",
     description: "The complete IT backbone for modern enterprises. We fuse resilient infrastructure with cutting-edge software to build, scale, and sustain.",
+    icons: {
+      icon: '/assets/logo.svg',
+      shortcut: '/assets/logo.svg',
+      apple: '/assets/logo.svg',
+    },
     alternates: {
       canonical: `${baseUrl}/${locale}`,
       languages: {

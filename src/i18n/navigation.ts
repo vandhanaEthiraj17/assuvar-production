@@ -4,7 +4,7 @@ import { defineRouting } from 'next-intl/routing';
 export const locales = [
     'en-US', 'en-GB', 'en-AU', 'en-CA', 'en-IN',
     'de-DE', 'fr-FR', 'es-ES', 'it-IT', 'nl-NL', 'sv-SE',
-    'pt-BR', 'es-MX', 'ar-SA', 'zh-CN', 'zh-TW', 'ja-JP', 'ko-KR', 'ru-RU'
+    'pt-BR'
 ];
 
 export const localeNames: Record<string, string> = {
@@ -19,14 +19,7 @@ export const localeNames: Record<string, string> = {
     'it-IT': 'Italiano (Italy)',
     'nl-NL': 'Nederlands (Netherlands)',
     'sv-SE': 'Svenska (Sweden)',
-    'pt-BR': 'Português (Brazil)',
-    'es-MX': 'Español (Mexico / LATAM)',
-    'ar-SA': 'العربية (Saudi Arabia)',
-    'zh-CN': '中文 (China – Simplified)',
-    'zh-TW': '中文 (Taiwan – Traditional)',
-    'ja-JP': '日本語 (Japan)',
-    'ko-KR': '한국어 (South Korea)',
-    'ru-RU': 'Русский (Russia)'
+    'pt-BR': 'Português (Brazil)'
 };
 
 export const routing = defineRouting({
