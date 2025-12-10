@@ -35,7 +35,8 @@ export default function GlobalContactForm({ mode = 'client', className = '', onS
         formData.set('subject', subject);
 
         try {
-            const response = await fetch('/', {
+            // Post to the static forms file to bypass Next.js handling
+            const response = await fetch('/__netlify-forms.html', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: new URLSearchParams(formData as any).toString(),
