@@ -6,17 +6,15 @@ import { ArrowRight, Calendar, User, Clock } from 'lucide-react';
 import { Link } from '@/src/i18n/navigation';
 
 type BlogProps = {
-    id?: string;
+    id: string;
     title: string;
-    excerpt?: string; // summary in CMS
-    summary?: string;
-    category?: string;
-    author?: string; // might not exist in CMS yet, distinct from body
+    excerpt: string;
+    category: string;
+    author: string;
     date: string;
-    readTime?: string; // derived or mock
+    readTime: string;
     slug: string;
-    thumbnail?: string; // image in CMS
-    image?: string;
+    image: string;
 };
 
 export default function BlogsList({ posts }: { posts: any[] }) {
