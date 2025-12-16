@@ -12,6 +12,7 @@ export const adminNavigation: NavigationItem[] = [
     { name: 'Payroll', href: '/admin/payroll', icon: 'DollarSign' },
     { name: 'Marketing', href: '/admin/marketing', icon: 'Megaphone' },
     { name: 'Documents', href: '/admin/documents', icon: 'BookOpen' },
+    { name: 'Access Control', href: '/admin/users/invite', icon: 'ShieldCheck' },
 ];
 
 export const partnerNavigation: NavigationItem[] = [

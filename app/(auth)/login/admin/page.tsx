@@ -6,8 +6,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Lock, Mail } from "lucide-react";
-import api from "@/lib/axios";
-import Cookies from "js-cookie";
+import axios from "axios"; // Direct axios for proxy
 
 export default function AdminLoginPage() {
     const router = useRouter();
@@ -22,19 +21,21 @@ export default function AdminLoginPage() {
         setError('');
 
         try {
-            const res = await api.post('/auth/login', { email, password });
+            // POST to Next.js Proxy to set HttpOnly Cookie
+            const res = await axios.post('/api/auth/proxy/login', { email, password });
 
-            if (res.data.role !== 'admin') {
+            const { user } = res.data;
+
+            if (user.role !== 'admin') {
                 setError('Access denied. Admin portal only.');
                 setIsLoading(false);
                 return;
             }
 
-            // Store Token
-            Cookies.set('token', res.data.token, { expires: 30, path: '/' });
+            console.log("Login Success: Secured Cookie Set.");
 
-            // Redirect
-            router.push('/admin');
+            // Redirect (Middleware allows because cookie is set)
+            window.location.href = '/admin';
         } catch (err: any) {
             console.error(err);
             const msg = err.response?.data?.message || 'Login failed. Please check credentials.';
