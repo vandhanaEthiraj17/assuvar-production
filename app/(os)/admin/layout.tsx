@@ -1,4 +1,5 @@
 import OSWrapper from "@/components/os/OSWrapper";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import { adminNavigation } from "@/config/navigation";
 
 export default function AdminLayout({
@@ -6,5 +7,11 @@ export default function AdminLayout({
 }: {
     children: React.ReactNode;
 }) {
-    return <OSWrapper navigation={adminNavigation}>{children}</OSWrapper>;
+    return (
+        <ProtectedRoute allowedRoles={['admin']}>
+            <OSWrapper navigation={adminNavigation}>
+                {children}
+            </OSWrapper>
+        </ProtectedRoute>
+    );
 }

@@ -1,71 +1,71 @@
 'use client';
 
-import { useState, Suspense, useEffect } from 'react';
+import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from "next/navigation";
 import { PageHeader } from "@/components/os/ui/PageHeader";
 import { Button } from "@/components/os/ui/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/os/ui/Card";
 import api from '@/lib/axios';
 
-function CreateSaleContent() {
+function CreateProjectContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const quoteId = searchParams.get('quoteId');
+    const saleId = searchParams.get('saleId');
     const [isLoading, setIsLoading] = useState(false);
-    const [clientReference, setClientReference] = useState('');
-
-    // Optional: Fetch quote details to show what is being converted
-    // const [quote, setQuote] = ...
+    const [name, setName] = useState('');
+    const [endDate, setEndDate] = useState('');
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
 
         try {
-            await api.post('/sales', {
-                quoteId,
-                clientReference
+            await api.post('/projects', {
+                saleId,
+                name,
+                endDate
             });
-            router.push('/admin/sales');
+            router.push('/admin/projects');
         } catch (error) {
             console.error(error);
-            alert('Failed to convert to sale');
+            alert('Failed to create project');
         } finally {
             setIsLoading(false);
         }
     };
 
-    if (!quoteId) return <div>Invalid Quote ID</div>;
+    if (!saleId) return <div>Invalid Sale ID</div>;
 
     return (
         <div className="space-y-6">
             <PageHeader
-                title="Convert to Sale"
-                description="Finalize the agreement and create a sale record."
+                title="Create Project"
+                description="Initialize project from sale."
             />
 
             <Card className="max-w-xl">
                 <CardHeader>
-                    <CardTitle>Sale Information</CardTitle>
+                    <CardTitle>Project Details</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="space-y-2">
-                            <label className="text-sm font-medium">Client Reference / Name</label>
+                            <label className="text-sm font-medium">Project Name</label>
                             <input
-                                value={clientReference}
-                                onChange={(e) => setClientReference(e.target.value)}
-                                placeholder="e.g. Acme Corp PO#123"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
                                 className="w-full h-10 rounded-md border border-slate-300 px-3 bg-white"
                                 required
                             />
-                            <p className="text-xs text-slate-500">
-                                This will identify the sale in reports.
-                            </p>
                         </div>
-
-                        <div className="p-4 bg-blue-50 text-blue-800 rounded-md text-sm border border-blue-100">
-                            Converting this quote will lock the agreement and allow payment collection.
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium">Deadline (End Date)</label>
+                            <input
+                                type="date"
+                                value={endDate}
+                                onChange={(e) => setEndDate(e.target.value)}
+                                className="w-full h-10 rounded-md border border-slate-300 px-3 bg-white"
+                            />
                         </div>
 
                         <div className="flex justify-end gap-2 pt-4">
@@ -73,7 +73,7 @@ function CreateSaleContent() {
                                 Cancel
                             </Button>
                             <Button type="submit" isLoading={isLoading}>
-                                Confirm Sale
+                                Create Project
                             </Button>
                         </div>
                     </form>
@@ -83,10 +83,10 @@ function CreateSaleContent() {
     );
 }
 
-export default function CreateSalePage() {
+export default function CreateProjectPage() {
     return (
         <Suspense fallback={<div>Loading...</div>}>
-            <CreateSaleContent />
+            <CreateProjectContent />
         </Suspense>
     );
 }
